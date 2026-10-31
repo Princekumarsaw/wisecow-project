@@ -1,28 +1,62 @@
-# Cow wisdom web server
+# Wisecow - Docker and Kubernetes Deployment
 
-## Prerequisites
+## About
+Wisecow is a simple web application that displays random fortune messages with ASCII cow graphics.
 
-```
-sudo apt install fortune-mod cowsay -y
-```
+Original project: https://github.com/nyrahul/wisecow
 
-## How to use?
+This repository contains Docker and Kubernetes deployment configurations added as part of the AccuKnox DevOps Engineer Trainee practical assessment.
 
-1. Run `./wisecow.sh`
-2. Point the browser to server port (default 4499)
+## Docker Setup
 
-## What to expect?
-![wisecow](https://github.com/nyrahul/wisecow/assets/9133227/8d6bfde3-4a5a-480e-8d55-3fef60300d98)
+Build the Docker image:
 
-# Problem Statement
-Deploy the wisecow application as a k8s app
+docker build -t wisecow:1.0 .
 
-## Requirement
-1. Create Dockerfile for the image and corresponding k8s manifest to deploy in k8s env. The wisecow service should be exposed as k8s service.
-2. Github action for creating new image when changes are made to this repo
-3. [Challenge goal]: Enable secure TLS communication for the wisecow app.
+Run the application:
 
-## Expected Artifacts
-1. Github repo containing the app with corresponding dockerfile, k8s manifest, any other artifacts needed.
-2. Github repo with corresponding github action.
-3. Github repo should be kept private and the access should be enabled for following github IDs: nyrahul
+docker run -d --name wisecow-test -p 4500:4499 wisecow:1.0
+
+Test:
+
+curl http://localhost:4500
+
+## Kubernetes Deployment
+
+Apply the Kubernetes manifests:
+
+sudo k3s kubectl apply -f k8s/namespace.yaml
+sudo k3s kubectl apply -f k8s/deployment.yaml
+sudo k3s kubectl apply -f k8s/service.yaml
+
+Check resources:
+
+sudo k3s kubectl get pods -n wisecow
+sudo k3s kubectl get svc -n wisecow
+
+Access the application:
+
+http://<EC2-PUBLIC-IP>:30499
+
+## Project Structure
+
+- Dockerfile: Builds the Docker image.
+- wisecow.sh: Application startup script.
+- k8s/namespace.yaml: Creates Kubernetes namespace.
+- k8s/deployment.yaml: Deploys the application.
+- k8s/service.yaml: Exposes the application through NodePort.
+
+## Assessment Requirements
+
+1. Docker containerization.
+2. Kubernetes deployment.
+3. Kubernetes Service exposure.
+4. GitHub Actions workflow to build and push Docker images.
+5. Automatic deployment to Kubernetes.
+6. Secure TLS communication.
+
+## Original Project
+
+Source code: https://github.com/nyrahul/wisecow
+
+The original LICENSE file and copyright notices are retained.
